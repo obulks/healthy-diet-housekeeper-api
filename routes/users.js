@@ -16,18 +16,28 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
   const code = body.code
 
   const userResult = await userDao.find(phone)
+  const smsResult = await smsDao.find(phone)
+
+  // 如果用户还没有获取验证码直接登录则进行错误返回
+  if (!smsResult) {
+    res.json({
+      code: 400,
+      msg: '请先获取验证码再登录',
+      data: {}
+    })
+    return
+  }
+
   // 如果用户存在则登录，不存在则注册
   if (userResult) {
     // 处理登录
-    const smsResult = await smsDao.find(phone)
-    // 将用户请求过来的信息与数据库信息进行比对
+    // 将用户请求过来的信息与数据库信息进行比对，信息正确则签发token给用户
     if (smsResult.phone === phone && smsResult.code === code) {
       const token = jwt.token(userResult._id)
       res.json({
         code: 200,
         msg: '登录成功',
         data: {
-          username: userResult.username,
           token: token
         }
       })
@@ -40,10 +50,15 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
     }
   } else {
     // 处理注册
+    const newUserResult = await userDao.add(phone)
+    // 创建完账号后也签发token给用户，完成注册并登录操作
+    const token = jwt.token(newUserResult._id)
     res.json({
       code: 200,
-      msg: '注册',
-      data: {}
+      msg: '账号注册成功',
+      data: {
+        token: token
+      }
     })
   }
 })

@@ -5,7 +5,7 @@ const Sms = require('../models/sms.js')
 let v = require('../util/validator')
 
 
-let phone = "15778664829"
+let phone = "15778664888"
 // let phone = "19114592569"
 // let phone = "114"
 

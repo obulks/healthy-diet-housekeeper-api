@@ -11,7 +11,7 @@ const bodyInfoSchema = new Schema({
 const userSchema = new Schema({
   username: String,
   password: String,
-  phone: String,
+  phone: {type: String, unique: true},
   body_info: [bodyInfoSchema]
 }, { collection: 'users' })
 
