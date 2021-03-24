@@ -1,14 +1,14 @@
 const User = require('../models/user.js')
 
-const find = async (phone) => {
-  return await User.findOne({ phone })
+const find = (phone) => {
+  return User.findOne({ phone })
 }
 
 const has = async (phone) => {
   return await find(phone) === null
 }
 
-const add = async (phone) => {
+const add = (phone) => {
   const user = new User({
     username: null,
     phone: phone
@@ -16,8 +16,15 @@ const add = async (phone) => {
   return User.create(user)
 }
 
-const info = async (id) => {
+const info = (id) => {
   return User.findById(id)
+}
+
+const update = (id, doc) => {
+  return User.findByIdAndUpdate({ _id: id }, doc)
+}
+
+const remove = () => {
 }
 
 
@@ -26,4 +33,5 @@ module.exports = {
   has,
   add,
   info,
+  update,
 }

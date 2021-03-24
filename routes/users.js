@@ -66,19 +66,25 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
 router.post('/profile', auth, async (req, res, next) => {
   // req.userID 是在auth中间件中加入的
   const id = req.userID
-  if (id) {
-    res.json({
-      code: 200,
-      msg: '',
-      data: await userDao.info(id)
-    })
-  } else {
-    res.json({
-      code: 400,
-      msg: '无效的token',
-      data: {}
-    })
-  }
+  const doc = await userDao.info(id)
+  res.json({
+    code: 200,
+    msg: '',
+    data: doc
+  })
+})
+
+router.post('/update', auth, async (req, res, next) => {
+  const id = req.userID
+  const doc = req.body
+  await userDao.update(id, doc)
+  // 更新后返回用户信息供前端使用
+  const userInfo = await userDao.info(id)
+  res.json({
+    code: 200,
+    msg: '更新成功',
+    data: userInfo
+  })
 })
 
 router.post('/token', auth, async (req, res, next) => {

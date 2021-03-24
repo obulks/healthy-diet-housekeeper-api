@@ -13,6 +13,12 @@ const auth = async (req, res, next) => {
     req.userID = jwt.parse(token)
   } catch (e) {
     req.userID = null
+    res.json({
+      code: 400,
+      msg: '无效的token',
+      data: {}
+    })
+    return
   }
   next()
 }
