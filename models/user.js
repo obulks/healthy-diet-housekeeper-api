@@ -2,18 +2,20 @@ const { Schema } = require('mongoose')
 const { mongoClient } = require('../conf/mongo.js')
 
 const bodyInfoSchema = new Schema({
-  sex: String,
-  birthday: Date,
-  height: Number,
-  weight: Number,
+  sex: { type: String },
+  birthday: { type: Date },
+  height: { type: Number },
+  weight: { type: Number },
+}, { _id: false })
 
-})
 const userSchema = new Schema({
-  username: String,
-  password: String,
-  phone: {type: String, unique: true},
-  body_info: [bodyInfoSchema]
-}, { collection: 'users' })
+  username: { type: String },
+  password: { type: String },
+  phone: { type: String },
+  body_info: { type: bodyInfoSchema }
+}, {
+  collection: 'users'
+})
 
 const User = mongoClient.model('User', userSchema)
 

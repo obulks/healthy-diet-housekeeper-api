@@ -10,6 +10,7 @@ router.get('/', function (req, res) {
   res.send('/users api')
 })
 
+// 登录和注册接口
 router.post('/login', phoneFormatError, async (req, res, next) => {
   const body = req.body
   const phone = body.phone
@@ -31,7 +32,7 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
   // 如果用户存在则登录，不存在则注册
   if (userResult) {
     // 处理登录
-    // 将用户请求过来的信息与数据库信息进行比对，信息正确则签发token给用户
+    // 将用户发送过来的手机号、验证码与数据库储存的手机号、验证码进行比对，信息正确则签发token给用户
     if (smsResult.phone === phone && smsResult.code === code) {
       const token = jwt.token(userResult._id)
       res.json({
@@ -51,7 +52,7 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
   } else {
     // 处理注册
     const newUserResult = await userDao.add(phone)
-    // 创建完账号后也签发token给用户，完成注册并登录操作
+    // 创建完账号后签发token给用户，完成注册并登录操作
     const token = jwt.token(newUserResult._id)
     res.json({
       code: 200,
@@ -63,7 +64,8 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
   }
 })
 
-router.post('/profile', auth, async (req, res, next) => {
+// 获取用户个人信息接口
+router.get('/profile', auth, async (req, res, next) => {
   // req.userID 是在auth中间件中加入的
   const id = req.userID
   const doc = await userDao.info(id)
@@ -74,19 +76,46 @@ router.post('/profile', auth, async (req, res, next) => {
   })
 })
 
+// 更新用户个人信息接口，注意请求的body要将数据
 router.post('/update', auth, async (req, res, next) => {
   const id = req.userID
   const doc = req.body
-  await userDao.update(id, doc)
-  // 更新后返回用户信息供前端使用
-  const userInfo = await userDao.info(id)
+  // 更新后返回最新的用户信息供前端使用
+  const userInfo = await userDao.update(id, doc)
   res.json({
     code: 200,
-    msg: '更新成功',
+    msg: '更新信息成功',
     data: userInfo
   })
 })
 
+router.delete('/', auth, async (req, res, next) => {
+  const id = req.userID
+  const removeResult = await userDao.remove(id)
+  console.log(removeResult)
+  if (removeResult) {
+    res.json({
+      code: 200,
+      msg: '删除用户成功',
+      data: {}
+    })
+  } else {
+    res.json({
+      code: 400,
+      msg: '用户不存在',
+      data: {}
+    })
+  }
+})
+
+// 模拟注册用户
+router.get('/create', async (req, res, next) => {
+  const phone = req.query.phone
+  const newUserResult = await userDao.add(phone)
+  res.json(newUserResult)
+})
+
+// 测试token
 router.post('/token', auth, async (req, res, next) => {
   const id = req.userID
   res.json(await userDao.info(id))

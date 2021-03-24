@@ -18,7 +18,7 @@ router.post('/code', phoneFormatError, async (req, res, next) => {
   const sendResult = await SMS.send(phone)
   // 如果短信发送成功则把手机号和验证码保存到数据库中的sms集合
   if (Object.keys(sendResult).length > 0) {
-    smsDao.update(sendResult.phone, sendResult.code)
+    await smsDao.update(sendResult.phone, sendResult.code)
     res.json({
       code: 200,
       msg: '短信发送成功',
@@ -39,7 +39,7 @@ router.post('/code', phoneFormatError, async (req, res, next) => {
 router.get('/mock-code', phoneFormatError, async (req, res, next) => {
   const phone = req.query.phone
   const code = Math.random().toString().slice(-6);
-  smsDao.update(phone, code)
+  await smsDao.update(phone, code)
   res.json({
     code: 200,
     msg: '短信发送成功',

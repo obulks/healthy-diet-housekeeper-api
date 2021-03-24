@@ -3,6 +3,7 @@
 // const Book = require('./models/book.js')
 const Sms = require('../models/sms.js')
 let v = require('../util/validator')
+const nanoid = require('../util/nanoid')
 
 
 let phone = "15778664888"
@@ -36,4 +37,6 @@ const findOne = (phone, code) => {
   })
 }
 // console.log(findOne(phone))
-findOneAndUpdate()
+// findOneAndUpdate()
+
+console.log(nanoid.username())

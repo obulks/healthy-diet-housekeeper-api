@@ -1,5 +1,11 @@
 const Sms = require('../models/Sms.js')
 
+/**
+ * 对手机号、验证码进行更新，如果记录存在则更新，不存在则创建
+ * @param phone
+ * @param code
+ * @returns {QueryWithHelpers<FindAndModifyWriteOpResultObject<Document>, Document, {}> | Query<FindAndModifyWriteOpResultObject<Document>, Document, {}> | void | QueryWithHelpers<Document, Document, {}> | QueryWithHelpers<Document | null, Document, {}> | Query<Document, Document, {}> | Query<Document | null, Document, {}> | Promise<FindAndModifyWriteOpResultObject<DefaultSchema>>}
+ */
 const update = (phone, code) => {
   let sms = {
     phone: phone,
@@ -7,14 +13,14 @@ const update = (phone, code) => {
     createdAt: Date.now()
   }
 
-  Sms.findOneAndUpdate({ phone: phone }, sms, { upsert: true }, (err, doc) => {
-    if (err) {
-      console.log('error: smsDao.findOneUpdate')
-    }
-    console.log('success: findOneAndUpdate')
-  })
+  return Sms.findOneAndUpdate({ phone: phone }, sms, { upsert: true })
 }
 
+/**
+ * 查询缓存记录
+ * @param phone
+ * @returns {Promise<{createdAt: number | {default: number, index: {expires: number}, type: DateConstructor} | boolean | string, code: *, phone: ({type: *}|string)}|null>}
+ */
 const find = async (phone) => {
   const result = await Sms.findOne({ phone })
   if (result) {
@@ -22,13 +28,13 @@ const find = async (phone) => {
       phone: result.phone,
       code: result.code,
       createdAt: result.createdAt
-
     }
   } else {
     return null
   }
 }
 
+// 查询验证码的存活时间和销毁倒计时
 const ttl = async (phone) => {
   const smsResult = await find(phone)
   if (smsResult) {

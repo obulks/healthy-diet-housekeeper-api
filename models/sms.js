@@ -11,8 +11,8 @@ const smsSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
-    index: {expires: 60}
-    // index: {expires: 300}
+    // ttl索引设置为4分50秒，是因为mongodb每60秒触发一次删除任务，如果设置了5钟，则会在6分时才删除
+    index: {expires: 290}
   }
 }, {collection: 'sms'})
 
