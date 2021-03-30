@@ -50,9 +50,13 @@ const ttl = async (phone) => {
   }
   return null
 }
-
+// 根据手机号删除文档
+const remove = async (phone) => {
+  const smsResult = await Sms.deleteOne({ phone })
+}
 module.exports = {
   find,
   update,
-  ttl
+  ttl,
+  remove
 }

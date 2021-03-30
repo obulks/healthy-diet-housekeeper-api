@@ -11,12 +11,12 @@ const find = (phone) => {
 }
 
 /**
- * 根据手机号查询用户是否存在
- * @param phone {String} 手机号
+ * 根据id查询用户是否存在
+ * @param id
  * @returns {Promise<boolean>}
  */
-const has = async (phone) => {
-  return await find(phone) === null
+const has = async (id) => {
+  return await User.findById(id) === null
 }
 
 /**

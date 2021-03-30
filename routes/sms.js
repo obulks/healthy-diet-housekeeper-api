@@ -24,7 +24,8 @@ router.post('/code', phoneFormatError, async (req, res, next) => {
       msg: '短信发送成功',
       data: {
         phone: phone,
-        code: sendResult.code
+        // 不应该把验证码响应给前端，仅在测试接口时暴露验证码
+        // code: sendResult.code
       },
     })
   } else {

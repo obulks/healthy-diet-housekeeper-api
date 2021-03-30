@@ -42,6 +42,8 @@ router.post('/login', phoneFormatError, async (req, res, next) => {
           token: token
         }
       })
+      // 登录成功后删除数据库缓存验证码
+      smsDao.remove(phone)
     } else {
       res.json({
         code: 400,
