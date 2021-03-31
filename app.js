@@ -5,6 +5,7 @@ const indexRouter = require('./routes/index.js')
 const usersRouter = require('./routes/users.js')
 const dietsRouter = require('./routes/diets.js')
 const smsRouter = require('./routes/sms.js')
+const newsRouter = require('./routes/news.js')
 
 const port = 3000
 const app = express()
@@ -19,6 +20,7 @@ app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/diets', dietsRouter)
 app.use('/sms', smsRouter)
+app.use('/news', newsRouter)
 
 app.listen(port, () => {
   console.log(`express server listening at http://localhost:${port}`)
