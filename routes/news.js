@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const gne = require('../util/gne.js')
 const juhe = require('../api/juhe.js')
 
 router.get('/', async (req, res) => {
@@ -8,33 +7,39 @@ router.get('/', async (req, res) => {
   const pageSize = req.query.page_size
 
   let result = await juhe.getNews(page, pageSize)
+
   if (result) {
     res.json({
       code: 200,
-      msg: 'ok',
+      msg: 'success',
       data: result,
     })
   } else {
     res.json({
       code: 400,
-      msg: 'error',
+      msg: 'filed',
       data: {}
     })
   }
 })
 
 router.get('/content', async (req, res) => {
-  const url = req.query.url
-  url
-  const content = await gne.extract(url)
+  const uniquekey = req.query.uniquekey
 
-  res.json({
-    code: 200,
-    msg: "ok",
-    data: {
-      content: content
-    }
-  })
+  const result = await juhe.getContent(uniquekey)
+  if (result) {
+    res.json({
+      code: 200,
+      msg: "success",
+      data: result
+    })
+  } else {
+    res.json({
+      code: 400,
+      msg: 'failed',
+      data: {}
+    })
+  }
 })
 
 module.exports = router;
