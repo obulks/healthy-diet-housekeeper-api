@@ -1,16 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const SMS = require('../util/SMS.js')
+const SMS = require('../api/SMS.js')
 const smsDao = require('../dao/smsDao.js')
 const { phoneFormatError } = require('../middleware/phoneErrorHandle.js')
 
 router.get('/', function (req, res) {
   res.send('/sms api')
 })
-
-// router.get('/has', function (req, res, next) {
-//   userDao.hasUser(req, res, next)
-// })
 
 router.post('/code', phoneFormatError, async (req, res, next) => {
   const phone = req.body.phone
