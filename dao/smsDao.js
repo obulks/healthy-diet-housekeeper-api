@@ -1,4 +1,4 @@
-const Sms = require('../models/Sms.js')
+const Sms = require('../models/sms.js')
 
 /**
  * 对手机号、验证码进行更新，如果记录存在则更新，不存在则创建
