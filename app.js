@@ -8,7 +8,7 @@ const smsRouter = require('./routes/sms.js')
 const newsRouter = require('./routes/news.js')
 const foodsRouter = require('./routes/foods.js')
 
-const port = 3000
+const port = 10001
 const app = express()
 
 // parse application/x-www-form-urlencoded
